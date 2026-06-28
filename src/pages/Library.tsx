@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useLibrary } from '@/contexts/LibraryContext'
 import LibraryGrid from '@/components/LibraryGrid'
 import SearchBar from '@/components/SearchBar'
@@ -22,7 +23,7 @@ export default function LibraryPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-3">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="flex flex-wrap items-center gap-3">
         <div className="flex-1 min-w-[220px]">
           <SearchBar value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
@@ -40,9 +41,9 @@ export default function LibraryPage() {
           <option value="name">Ordenar por nome</option>
           <option value="category">Ordenar por categoria</option>
         </select>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-wrap gap-3 rounded-lg border border-white/10 bg-[color:var(--surface-2)] p-3">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: 0.05 }} className="flex flex-wrap gap-3 rounded-lg border border-white/10 bg-[color:var(--surface-2)] p-3">
         <div className="flex items-center gap-2">
           <span className="text-sm text-white/70">Favoritos:</span>
           <strong>{meta.favorites.length}</strong>
@@ -57,9 +58,9 @@ export default function LibraryPage() {
             Criar
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-wrap gap-2">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: 0.08 }} className="flex flex-wrap gap-2">
         {meta.categories.map((category) => (
           <div key={category.id} className="flex items-center gap-2 rounded-full border border-white/10 bg-[color:var(--surface-2)] px-3 py-1 text-sm">
             <span>{category.name}</span>
@@ -71,9 +72,9 @@ export default function LibraryPage() {
             </button>
           </div>
         ))}
-      </div>
+      </motion.div>
 
-      <div style={{ height: 'calc(100vh - 320px)' }} className="w-full">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }} style={{ height: 'calc(100vh - 320px)' }} className="w-full">
         <LibraryGrid
           items={filtered}
           categories={meta.categories}
@@ -94,7 +95,7 @@ export default function LibraryPage() {
           onAssignCategory={(item, categoryId) => assignCategory(item.id, categoryId)}
           onReorder={(sourceId, targetId) => reorderItems(sourceId, targetId)}
         />
-      </div>
+      </motion.div>
     </div>
   )
 }

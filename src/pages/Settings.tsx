@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import Button from '@/components/Button'
+import AnimatedSurface from '@/components/AnimatedSurface'
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
@@ -72,14 +74,14 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="ds-card flex flex-col gap-2">
+      <AnimatedSurface className="ds-card flex flex-col gap-2">
         <div className="text-lg font-semibold">Configurações</div>
         <p className="text-sm text-white/60">Tudo é salvo automaticamente no Electron Store.</p>
         {message && <div className="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm">{message}</div>}
-      </div>
+      </AnimatedSurface>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <div className="ds-card flex flex-col gap-4">
+        <AnimatedSurface className="ds-card flex flex-col gap-4">
           <div>
             <div className="text-sm font-semibold">Tema</div>
             <select className="ds-input mt-2 w-full" value={settings.theme} onChange={(e) => void persist({ ...settings, theme: e.target.value as any })}>
@@ -107,9 +109,9 @@ export default function SettingsPage() {
             <span>Salvar automaticamente</span>
             <input type="checkbox" checked={settings.autoSave} onChange={(e) => void persist({ ...settings, autoSave: e.target.checked })} />
           </label>
-        </div>
+        </AnimatedSurface>
 
-        <div className="ds-card flex flex-col gap-4">
+        <AnimatedSurface className="ds-card flex flex-col gap-4">
           <div>
             <div className="text-sm font-semibold">Atalho global</div>
             <input className="ds-input mt-2 w-full" value={settings.globalShortcut} onChange={(e) => void persist({ ...settings, globalShortcut: e.target.value })} placeholder="CommandOrControl+Alt+S" />
@@ -127,15 +129,15 @@ export default function SettingsPage() {
             </div>
             <Button variant="ghost" className="mt-3" onClick={() => void addFolder()}>Adicionar pasta</Button>
           </div>
-        </div>
+        </AnimatedSurface>
       </div>
 
-      <div className="ds-card flex flex-wrap gap-3">
+      <AnimatedSurface className="ds-card flex flex-wrap gap-3">
         <Button variant="ghost" onClick={() => void backup()}>Backup</Button>
         <Button variant="ghost" onClick={() => void restore()}>Restaurar</Button>
         <Button variant="ghost" onClick={() => void reset()}>Resetar configurações</Button>
         <Button variant="ghost" onClick={() => void quit()}>Sair completamente</Button>
-      </div>
+      </AnimatedSurface>
     </div>
   )
 }
