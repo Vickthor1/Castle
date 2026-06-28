@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 
 const items = [
-  { to: '/', label: 'Home', icon: Home },
+  { to: '/', label: 'Início', icon: Home },
   { to: '/library', label: 'Biblioteca', icon: Archive },
   { to: '/favorites', label: 'Favoritos', icon: Star },
   { to: '/categories', label: 'Categorias', icon: Layers },
