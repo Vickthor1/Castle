@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { scanWindowsApps, addWindowsFolder, pickWindowsFolder } from '@/services/windowsIntegration'
+import { scanWindowsApps, addWindowsFolder, pickWindowsFolder, type WindowsScanResult } from '@/services/windowsIntegration'
 import Card from '@/components/Card'
 import Button from '@/components/Button'
 
 export default function WindowsIntegrationPanel() {
-  const [apps, setApps] = useState<any[]>([])
-  useEffect(() => { void scanWindowsApps().then(setApps) }, [])
+  const [apps, setApps] = useState<WindowsScanResult[]>([])
+
+  useEffect(() => {
+    void scanWindowsApps().then(setApps)
+  }, [])
+
   return (
     <Card>
       <div className="flex items-center justify-between">

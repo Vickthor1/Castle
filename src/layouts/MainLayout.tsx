@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import Sidebar from '@/components/Sidebar'
 import HeaderBar from '@/components/HeaderBar'
 import Footer from '@/components/Footer'
+import { getElectronApi } from '@/services/electronApi'
 
 type Props = { children?: ReactNode }
 
@@ -10,7 +11,7 @@ export default function MainLayout({ children }: Props) {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        void window.electron?.hideTrayWindow?.()
+        void getElectronApi().hideTrayWindow()
       }
     }
 

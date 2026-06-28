@@ -1,38 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState } from 'react'
 import Button from '@/components/Button'
 import AnimatedSurface from '@/components/AnimatedSurface'
+import { getElectronApi } from '@/services/electronApi'
+import { useSettings } from '@/hooks/useSettings'
+import type { AppSettings } from '@/types/settings'
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState({
-    theme: 'dark',
-    language: 'pt-BR',
-    startWithWindows: false,
-    monitoredFolders: [] as string[],
-    globalShortcut: 'CommandOrControl+Alt+S',
-    autoSave: true
-  })
+  const { settings, setSettings, saveSettings } = useSettings()
   const [message, setMessage] = useState('')
 
-  useEffect(() => {
-    void (async () => {
-      const current = await window.electron?.getSettings?.()
-      if (current) setSettings(current)
-    })()
-  }, [])
-
-  const persist = async (next: typeof settings) => {
-    setSettings(next)
-    if (next.autoSave) {
-      await window.electron?.setSettings?.(next)
-      setMessage('Configurações salvas automaticamente.')
-    }
+  const persist = async (next: AppSettings) => {
+    await saveSettings(next)
+    setMessage('Configurações salvas automaticamente.')
   }
 
   const addFolder = async () => {
-    const folder = await window.electron?.pickWindowsFolder?.()
+    const folder = await getElectronApi().pickWindowsFolder()
     if (!folder) return
-    const nextFolders = await window.electron?.addMonitoredFolder?.(folder)
+    const nextFolders = await getElectronApi().addMonitoredFolder(folder)
     if (nextFolders) {
       setSettings((prev) => ({ ...prev, monitoredFolders: nextFolders }))
       setMessage('Pasta adicionada às monitoradas.')
@@ -40,7 +25,7 @@ export default function SettingsPage() {
   }
 
   const removeFolder = async (folder: string) => {
-    const nextFolders = await window.electron?.removeMonitoredFolder?.(folder)
+    const nextFolders = await getElectronApi().removeMonitoredFolder(folder)
     if (nextFolders) {
       setSettings((prev) => ({ ...prev, monitoredFolders: nextFolders }))
       setMessage('Pasta removida das monitoradas.')
@@ -48,12 +33,12 @@ export default function SettingsPage() {
   }
 
   const backup = async () => {
-    const path = await window.electron?.backupSettings?.()
+    const path = await getElectronApi().backupSettings()
     setMessage(path ? `Backup salvo em ${path}` : 'Backup cancelado.')
   }
 
   const restore = async () => {
-    const restored = await window.electron?.restoreSettings?.()
+    const restored = await getElectronApi().restoreSettings()
     if (restored) {
       setSettings(restored)
       setMessage('Configurações restauradas.')
@@ -61,7 +46,7 @@ export default function SettingsPage() {
   }
 
   const reset = async () => {
-    const defaults = await window.electron?.resetSettings?.()
+    const defaults = await getElectronApi().resetSettings()
     if (defaults) {
       setSettings(defaults)
       setMessage('Configurações redefinidas.')
@@ -69,7 +54,7 @@ export default function SettingsPage() {
   }
 
   const quit = async () => {
-    await window.electron?.quitApp?.()
+    await getElectronApi().quitApp()
   }
 
   return (

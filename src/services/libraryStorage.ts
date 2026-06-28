@@ -1,3 +1,5 @@
+import { getElectronApi } from '@/services/electronApi'
+
 export type LibraryMeta = {
   favorites: string[]
   categories: Array<{ id: string; name: string; items: string[] }>
@@ -8,7 +10,8 @@ export type LibraryMeta = {
 }
 
 export async function getLibraryMeta(): Promise<LibraryMeta> {
-  return (await window.electron?.getLibraryMeta?.()) || {
+  const meta = (await getElectronApi().getLibraryMeta()) as LibraryMeta | null
+  return meta ?? {
     favorites: [],
     categories: [],
     recent: [],
@@ -19,5 +22,5 @@ export async function getLibraryMeta(): Promise<LibraryMeta> {
 }
 
 export async function setLibraryMeta(meta: LibraryMeta) {
-  return window.electron?.setLibraryMeta?.(meta)
+  return getElectronApi().setLibraryMeta(meta)
 }
