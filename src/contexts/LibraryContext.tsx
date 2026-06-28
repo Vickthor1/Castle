@@ -108,7 +108,7 @@ export function LibraryProvider({ children }: { children?: React.ReactNode }) {
   const addFolder = async () => {
     const folder = await pickWindowsFolder();
     if (!folder) return;
-    await addWindowsFolderToStore(folder);
+    await addWindowsFolder(folder);
     await refreshApps();
   };
 

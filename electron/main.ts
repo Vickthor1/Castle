@@ -9,6 +9,24 @@ import { setupAutoUpdater } from './updater'
 let mainWindow: BrowserWindow | null = null
 let splashWindow: BrowserWindow | null = null
 
+const hasSingleInstanceLock = app.requestSingleInstanceLock()
+
+if (!hasSingleInstanceLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+      showWindow()
+      mainWindow.focus()
+    } else {
+      createWindow()
+    }
+  })
+}
+
 function getBuildAssetPath(fileName: string) {
   return app.isPackaged ? join(process.resourcesPath, fileName) : join(__dirname, '../build', fileName)
 }
