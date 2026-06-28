@@ -32,7 +32,7 @@ export default function SteamCard({
       layout
       draggable
       whileHover={{ translateY: -6 }}
-      className={clsx('relative rounded-lg overflow-hidden cursor-pointer', 'bg-[color:var(--surface-2)] border border-white/4')}
+      className={clsx('relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-[color:var(--surface-2)] shadow-[0_10px_30px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(0,0,0,0.58)]')}
       onClick={() => onClick?.(item)}
       onContextMenu={(e) => onContextMenu?.(e, item)}
       onDragStart={() => onDragStart?.(item)}

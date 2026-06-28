@@ -84,14 +84,14 @@ export default function SpotlightSearch() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-start justify-center bg-[rgba(3,3,3,0.78)] p-4 backdrop-blur-2xl"
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) {
                 closeModal()
               }
             }}
           >
-            <motion.div initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -8, opacity: 0 }} className="w-full max-w-2xl rounded-2xl glass p-3 shadow-2xl" role="dialog" aria-modal="true" aria-label="Busca rápida">
+            <motion.div initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -8, opacity: 0 }} className="glass-strong w-full max-w-2xl rounded-2xl p-3 shadow-2xl" role="dialog" aria-modal="true" aria-label="Busca rápida">
               <div className="flex items-center gap-2 px-2 py-1">
                 <Search size={18} />
                 <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={onKeyDown} placeholder="Pesquisar apps, categorias…" className="w-full bg-transparent px-2 py-2 text-white outline-none" autoFocus />

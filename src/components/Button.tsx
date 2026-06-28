@@ -15,7 +15,7 @@ export default function Button({ variant = 'primary', className = '', children, 
       whileHover={disabled ? undefined : { y: -2, scale: 1.01 }}
       type={type}
       disabled={disabled}
-      className={clsx('ds-btn', style, className, disabled && 'opacity-60 cursor-not-allowed')}
+      className={clsx('ds-btn', style, className, disabled && 'cursor-not-allowed opacity-60')}
       {...props}
     >
       {children}

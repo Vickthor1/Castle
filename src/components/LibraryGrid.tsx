@@ -52,7 +52,7 @@ export default function LibraryGrid({ items, categories, onToggleFavorite, onOpe
   return (
     <div ref={ref} className="h-full w-full min-h-[320px]">
       {items.length === 0 ? (
-        <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-white/10 bg-[color:var(--surface-2)] text-sm text-white/60">
+        <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-white/10 bg-[color:var(--surface-2)] text-sm text-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
           Nenhum app encontrado.
         </div>
       ) : (

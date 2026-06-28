@@ -20,7 +20,7 @@ export default function Sidebar() {
       initial={{ x: -12, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.35 }}
-      className="flex w-18 min-w-[72px] flex-col gap-3 bg-[color:var(--ds-800)] p-3 glass-border lg:w-64"
+      className="surface-panel flex w-18 min-w-[72px] flex-col gap-3 p-3 lg:w-64"
     >
       <div className="flex items-center gap-3 px-2 py-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[color:var(--ds-red)] text-sm font-semibold shadow-[0_0_30px_rgba(255,0,0,0.2)]">C</div>

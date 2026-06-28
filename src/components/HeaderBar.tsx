@@ -10,7 +10,7 @@ export default function HeaderBar() {
       initial={{ y: -8, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.25 }}
-      className="flex flex-wrap items-center gap-3 border-b glass p-4"
+      className="flex flex-wrap items-center gap-3 border-b border-white/10 bg-[color:var(--ds-800)]/70 p-4 backdrop-blur-xl"
     >
       <div className="min-w-[220px] flex-1">
         <SpotlightSearch />
