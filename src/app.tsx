@@ -1,11 +1,10 @@
-import React, { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import MainLayout from '@/layouts/MainLayout'
-import { LibraryProvider } from '@/contexts/LibraryContext'
+import React, { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import MainLayout from '@/layouts/MainLayout';
+import { LibraryProvider } from '@/contexts/LibraryContext';
 
-const Home = lazy(() => import('@/pages/Home'))
-const LibraryPage = lazy(() => import('@/pages/Library'))
-const SettingsPage = lazy(() => import('@/pages/Settings'))
+const LibraryPage = lazy(() => import('@/pages/Library'));
+const SettingsPage = lazy(() => import('@/pages/Settings'));
 
 export default function App() {
   return (
@@ -13,12 +12,11 @@ export default function App() {
       <MainLayout>
         <Suspense fallback={<div className="p-4 text-sm text-white/60">Carregando…</div>}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/library" element={<LibraryPage />} />
+            <Route path="/" element={<LibraryPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </Suspense>
       </MainLayout>
     </LibraryProvider>
-  )
+  );
 }

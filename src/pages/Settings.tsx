@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Button from '@/components/Button';
-import AnimatedSurface from '@/components/AnimatedSurface';
 import { getElectronApi } from '@/services/electronApi';
 import { useSettings } from '@/hooks/useSettings';
 import type { AppSettings } from '@/types/settings';
@@ -11,7 +10,7 @@ export default function SettingsPage() {
 
   const persist = async (next: AppSettings) => {
     await saveSettings(next);
-    setMessage('Configurações salvas automaticamente.');
+    setMessage('Configurações salvas.');
   };
 
   const addFolder = async () => {
@@ -20,7 +19,7 @@ export default function SettingsPage() {
     const nextFolders = await getElectronApi().addMonitoredFolder(folder);
     if (nextFolders) {
       setSettings((prev) => ({ ...prev, monitoredFolders: nextFolders }));
-      setMessage('Pasta adicionada às monitoradas.');
+      setMessage('Pasta adicionada.');
     }
   };
 
@@ -28,7 +27,7 @@ export default function SettingsPage() {
     const nextFolders = await getElectronApi().removeMonitoredFolder(folder);
     if (nextFolders) {
       setSettings((prev) => ({ ...prev, monitoredFolders: nextFolders }));
-      setMessage('Pasta removida das monitoradas.');
+      setMessage('Pasta removida.');
     }
   };
 
@@ -59,27 +58,26 @@ export default function SettingsPage() {
 
   return (
     <div className="grid gap-5">
-      <AnimatedSurface className="ds-card grid gap-4 rounded-[8px] p-6">
+      <div className="ds-card rounded-[8px] p-6">
         <div className="flex flex-col gap-2">
           <p className="eyebrow">Configurações</p>
           <h1 className="text-2xl font-semibold text-white">Personalize o Castle</h1>
           <p className="max-w-2xl text-sm text-white/65">
-            Ajuste tema, idioma, pastas monitoradas e recursos do app com a experiência premium de
-            um launcher moderno.
+            Ajuste opções de tema, idioma, pastas monitoradas e comportamento básico do app.
           </p>
         </div>
         {message && (
           <div
-            className="rounded-[8px] border border-[color:var(--border)] bg-[#0F0F0F] px-4 py-3 text-sm text-white/75"
+            className="mt-4 rounded-[8px] border border-[color:var(--border)] bg-[#0F0F0F] px-4 py-3 text-sm text-white/75"
             role="status"
           >
             {message}
           </div>
         )}
-      </AnimatedSurface>
+      </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <AnimatedSurface className="ds-card rounded-[8px] p-6">
+        <div className="ds-card rounded-[8px] p-6">
           <div className="grid gap-4">
             <label className="grid gap-2 text-sm text-white/75">
               <span className="font-semibold text-white">Tema</span>
@@ -133,9 +131,9 @@ export default function SettingsPage() {
               />
             </label>
           </div>
-        </AnimatedSurface>
+        </div>
 
-        <AnimatedSurface className="ds-card rounded-[8px] p-6">
+        <div className="ds-card rounded-[8px] p-6">
           <div className="grid gap-4">
             <label className="grid gap-2 text-sm text-white/75">
               <span className="font-semibold text-white">Atalho global</span>
@@ -173,10 +171,10 @@ export default function SettingsPage() {
               </Button>
             </div>
           </div>
-        </AnimatedSurface>
+        </div>
       </div>
 
-      <AnimatedSurface className="ds-card rounded-[8px] p-6">
+      <div className="ds-card rounded-[8px] p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-white/60">Gerenciar dados</p>
@@ -199,7 +197,7 @@ export default function SettingsPage() {
             </Button>
           </div>
         </div>
-      </AnimatedSurface>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import React, { ReactNode, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Sidebar from '@/components/Sidebar';
 import HeaderBar from '@/components/HeaderBar';
-import Footer from '@/components/Footer';
 import { getElectronApi } from '@/services/electronApi';
 
 type Props = { children?: ReactNode };
@@ -32,7 +31,6 @@ export default function MainLayout({ children }: Props) {
         >
           {children}
         </motion.main>
-        <Footer />
       </div>
     </div>
   );
