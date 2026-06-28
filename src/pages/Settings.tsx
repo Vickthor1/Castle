@@ -62,45 +62,49 @@ export default function SettingsPage() {
       <AnimatedSurface className="ds-card flex flex-col gap-2">
         <div className="text-lg font-semibold">Configurações</div>
         <p className="text-sm text-white/60">Tudo é salvo automaticamente no Electron Store.</p>
-        {message && <div className="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm">{message}</div>}
+        {message && (
+          <div className="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm" role="status">
+            {message}
+          </div>
+        )}
       </AnimatedSurface>
 
       <div className="grid gap-4 xl:grid-cols-2">
         <AnimatedSurface className="ds-card flex flex-col gap-4">
-          <div>
-            <div className="text-sm font-semibold">Tema</div>
-            <select className="ds-input mt-2 w-full" value={settings.theme} onChange={(e) => void persist({ ...settings, theme: e.target.value as AppSettings['theme'] })}>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Tema</span>
+            <select id="theme-select" className="ds-input w-full" value={settings.theme} onChange={(e) => void persist({ ...settings, theme: e.target.value as AppSettings['theme'] })}>
               <option value="dark">Escuro</option>
               <option value="light">Claro</option>
               <option value="system">Sistema</option>
             </select>
-          </div>
+          </label>
 
-          <div>
-            <div className="text-sm font-semibold">Idioma</div>
-            <select className="ds-input mt-2 w-full" value={settings.language} onChange={(e) => void persist({ ...settings, language: e.target.value as AppSettings['language'] })}>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Idioma</span>
+            <select id="language-select" className="ds-input w-full" value={settings.language} onChange={(e) => void persist({ ...settings, language: e.target.value as AppSettings['language'] })}>
               <option value="pt-BR">Português (BR)</option>
               <option value="en">English</option>
               <option value="es">Español</option>
             </select>
-          </div>
+          </label>
 
           <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2">
             <span>Inicializar com Windows</span>
-            <input type="checkbox" checked={settings.startWithWindows} onChange={(e) => void persist({ ...settings, startWithWindows: e.target.checked })} />
+            <input id="start-with-windows" type="checkbox" checked={settings.startWithWindows} onChange={(e) => void persist({ ...settings, startWithWindows: e.target.checked })} />
           </label>
 
           <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2">
             <span>Salvar automaticamente</span>
-            <input type="checkbox" checked={settings.autoSave} onChange={(e) => void persist({ ...settings, autoSave: e.target.checked })} />
+            <input id="auto-save" type="checkbox" checked={settings.autoSave} onChange={(e) => void persist({ ...settings, autoSave: e.target.checked })} />
           </label>
         </AnimatedSurface>
 
         <AnimatedSurface className="ds-card flex flex-col gap-4">
-          <div>
-            <div className="text-sm font-semibold">Atalho global</div>
-            <input className="ds-input mt-2 w-full" value={settings.globalShortcut} onChange={(e) => void persist({ ...settings, globalShortcut: e.target.value })} placeholder="CommandOrControl+Alt+S" />
-          </div>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Atalho global</span>
+            <input id="global-shortcut" className="ds-input w-full" value={settings.globalShortcut} onChange={(e) => void persist({ ...settings, globalShortcut: e.target.value })} placeholder="CommandOrControl+Alt+S" />
+          </label>
 
           <div>
             <div className="text-sm font-semibold">Pastas monitoradas</div>
@@ -108,7 +112,9 @@ export default function SettingsPage() {
               {settings.monitoredFolders.map((folder) => (
                 <div key={folder} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm">
                   {folder}
-                  <button className="ml-2 text-white/60" onClick={() => void removeFolder(folder)}>×</button>
+                  <button type="button" className="ml-2 text-white/60 transition-colors hover:text-white" onClick={() => void removeFolder(folder)} aria-label={`Remover ${folder}`}>
+                    ×
+                  </button>
                 </div>
               ))}
             </div>

@@ -1,5 +1,4 @@
 :root{
-  /* Core palette */
   --ds-900: #050505;
   --ds-800: #111111;
   --ds-700: #1C1C1C;
@@ -7,7 +6,6 @@
   --ds-red-dark: #D90000;
   --ds-100: #ECECEC;
 
-  /* Semantic tokens */
   --bg: var(--ds-900);
   --surface: rgba(255,255,255,0.02);
   --surface-2: rgba(255,255,255,0.03);
@@ -19,6 +17,7 @@
 
 @layer base{
   html,body,#root{height:100%}
+  *{box-sizing:border-box}
   body{
     font-family: Inter, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial;
     background: linear-gradient(180deg, var(--ds-900) 0%, #070707 30%);
@@ -27,8 +26,11 @@
     -moz-osx-font-smoothing:grayscale;
     background-attachment: fixed;
   }
+  button,input,select,textarea{font:inherit}
+  button{cursor:pointer}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:rgba(255,0,0,0.28);color:white}
 
-  /* Scrollbar */
   ::-webkit-scrollbar{width:12px;height:12px}
   ::-webkit-scrollbar-thumb{
     background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
@@ -39,7 +41,6 @@
 }
 
 @layer components{
-  /* Glass / frosted surface */
   .glass{
     background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     backdrop-filter: blur(8px);
@@ -49,9 +50,8 @@
     border-radius: 10px;
   }
 
-  /* Buttons */
   .ds-btn{
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-transform duration-250;
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-md px-4 py-2 font-semibold transition-all duration-250;
     transform: translateZ(0);
   }
   .ds-btn-primary{
@@ -66,21 +66,26 @@
     border: 1px solid rgba(255,255,255,0.04);
   }
   .ds-btn:hover{transform:translateY(-2px) scale(1.02)}
+  .ds-btn:focus-visible,
+  .ds-input:focus-visible,
+  .ds-item:focus-visible{
+    outline: 2px solid rgba(255,0,0,0.45);
+    outline-offset: 2px;
+  }
+  .ds-btn:disabled{opacity:0.55; cursor:not-allowed; transform:none}
 
-  /* Inputs */
   .ds-input{
-    @apply px-3 py-2 rounded-md bg-transparent border border-white/10 text-white/90 outline-none transition-shadow duration-250;
+    @apply rounded-md border border-white/10 bg-transparent px-3 py-2 text-white/90 outline-none transition-shadow duration-250;
     box-shadow: inset 0 -1px 0 rgba(255,255,255,0.02);
   }
+  .ds-input::placeholder{color:rgba(255,255,255,0.35)}
   .ds-input:focus{box-shadow: 0 4px 18px rgba(217,0,0,0.06); border-color: var(--ds-red)}
 
-  /* Cards */
   .ds-card{
-    @apply p-4 rounded-lg bg-[color:var(--surface)] border border-white/10;
+    @apply rounded-lg border border-white/10 bg-[color:var(--surface)] p-4;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
   }
 
-  /* Modal */
   .ds-modal-backdrop{
     position: fixed; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(2,2,2,0.6); z-index: 60;
   }
@@ -88,7 +93,6 @@
     width: min(720px, 92%); padding: 18px; border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015)); border:1px solid rgba(255,255,255,0.04); box-shadow: var(--glow);
   }
 
-  /* Dropdown / Menu */
   .ds-dropdown{
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.04);
@@ -99,10 +103,8 @@
   .ds-item{padding:8px 12px; border-radius:8px; cursor:pointer}
   .ds-item:hover{background:rgba(255,255,255,0.02)}
 
-  /* Tooltip */
   .ds-tooltip{background:rgba(0,0,0,0.85); color:white; padding:6px 8px; border-radius:6px; font-size:12px}
 
-  /* Glow utility */
   .glow{box-shadow: var(--glow)}
 }
 

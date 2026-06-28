@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Sparkles, X } from 'lucide-react'
 import { useFuzzySearch } from '@/hooks/useFuzzySearch'
 import { useLibrary } from '@/contexts/LibraryContext'
-import type { AppItem } from '@/types/library'
 
 export default function SpotlightSearch() {
   const [open, setOpen] = useState(false)
@@ -14,6 +13,12 @@ export default function SpotlightSearch() {
 
   const filtered = useFuzzySearch(items, query)
 
+  const closeModal = () => {
+    setOpen(false)
+    setQuery('')
+    setIndex(0)
+  }
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'p') {
@@ -23,9 +28,7 @@ export default function SpotlightSearch() {
         setIndex(0)
       }
       if (event.key === 'Escape') {
-        setOpen(false)
-        setQuery('')
-        setIndex(0)
+        closeModal()
       }
     }
     window.addEventListener('keydown', onKeyDown)
@@ -60,8 +63,7 @@ export default function SpotlightSearch() {
       const selected = visibleItems[index]
       if (selected) {
         window.open(selected.path || '', '_blank')
-        setOpen(false)
-        setQuery('')
+        closeModal()
       }
     } else if (event.key === 'Tab') {
       event.preventDefault()
@@ -71,26 +73,40 @@ export default function SpotlightSearch() {
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className="ds-btn ds-btn-ghost">
+      <button type="button" onClick={() => setOpen(true)} className="ds-btn ds-btn-ghost">
         <Search size={16} />
         Buscar
       </button>
 
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-start justify-center p-4">
-            <motion.div initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -8, opacity: 0 }} className="w-full max-w-2xl glass rounded-2xl p-3 shadow-2xl">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 p-4 backdrop-blur-md"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) {
+                closeModal()
+              }
+            }}
+          >
+            <motion.div initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -8, opacity: 0 }} className="w-full max-w-2xl rounded-2xl glass p-3 shadow-2xl" role="dialog" aria-modal="true" aria-label="Busca rápida">
               <div className="flex items-center gap-2 px-2 py-1">
                 <Search size={18} />
-                <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={onKeyDown} placeholder="Pesquisar apps, categorias…" className="w-full bg-transparent outline-none text-white px-2 py-2" autoFocus />
-                <button onClick={() => setOpen(false)} className="p-2 rounded hover:bg-white/10"><X size={16} /></button>
+                <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={onKeyDown} placeholder="Pesquisar apps, categorias…" className="w-full bg-transparent px-2 py-2 text-white outline-none" autoFocus />
+                <button type="button" onClick={closeModal} className="rounded p-2 hover:bg-white/10" aria-label="Fechar busca">
+                  <X size={16} />
+                </button>
               </div>
               <div className="mt-2 flex flex-col gap-2">
                 {visibleItems.length === 0 && query && <div className="p-3 text-sm text-white/60">Nenhum resultado.</div>}
                 {visibleItems.map((item, idx) => (
-                  <div key={item.id} className={`flex items-center justify-between p-2 rounded-lg ${idx === index ? 'bg-white/10' : 'hover:bg-white/5'}`}>
+                  <div key={item.id} className={`flex items-center justify-between rounded-lg p-2 ${idx === index ? 'bg-white/10' : 'hover:bg-white/5'}`}>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded bg-white/10 flex items-center justify-center">{item.icon ? <img src={item.icon} alt="" className="w-6 h-6 object-cover rounded" /> : <Sparkles size={16} />}</div>
+                      <div className="flex h-8 w-8 items-center justify-center rounded bg-white/10">
+                        {item.icon ? <img src={item.icon} alt="" className="h-6 w-6 rounded object-cover" /> : <Sparkles size={16} />}
+                      </div>
                       <div>
                         <div className="font-medium">{item.name}</div>
                         <div className="text-xs text-white/60">{item.category || 'Aplicativo'}</div>

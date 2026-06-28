@@ -21,26 +21,39 @@ export default function LibraryPage() {
     return res
   }, [items, search, filterCategory, sortBy])
 
+  const handleRenameCategory = (id: string, currentName: string) => {
+    const nextName = window.prompt('Renomear categoria', currentName)
+    if (nextName) {
+      renameCategory(id, nextName)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="flex flex-wrap items-center gap-3">
-        <div className="flex-1 min-w-[220px]">
+        <div className="min-w-[220px] flex-1">
           <SearchBar value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         <Button variant="ghost" onClick={() => void refreshApps()}>Atualizar</Button>
         <Button variant="ghost" onClick={() => void addFolder()}>Adicionar pasta</Button>
-        <select className="ds-input w-44" value={filterCategory || ''} onChange={(e) => setFilterCategory(e.target.value || null)}>
-          <option value="">Todos</option>
-          {meta.categories.map((category) => (
-            <option key={category.id} value={category.name}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-        <select className="ds-input w-44" value={sortBy} onChange={(e) => setSortBy(e.target.value as 'name' | 'category')}>
-          <option value="name">Ordenar por nome</option>
-          <option value="category">Ordenar por categoria</option>
-        </select>
+        <label className="flex items-center gap-2 text-sm text-white/70">
+          <span className="hidden sm:inline">Categoria</span>
+          <select className="ds-input w-44" value={filterCategory || ''} onChange={(e) => setFilterCategory(e.target.value || null)}>
+            <option value="">Todos</option>
+            {meta.categories.map((category) => (
+              <option key={category.id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-sm text-white/70">
+          <span className="hidden sm:inline">Ordenar</span>
+          <select className="ds-input w-44" value={sortBy} onChange={(e) => setSortBy(e.target.value as 'name' | 'category')}>
+            <option value="name">Ordenar por nome</option>
+            <option value="category">Ordenar por categoria</option>
+          </select>
+        </label>
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: 0.05 }} className="flex flex-wrap gap-3 rounded-lg border border-white/10 bg-[color:var(--surface-2)] p-3">
@@ -52,8 +65,8 @@ export default function LibraryPage() {
           <span className="text-sm text-white/70">Recentes:</span>
           <strong>{meta.recent.length}</strong>
         </div>
-        <div className="flex-1 min-w-[220px] flex gap-2">
-          <input className="ds-input flex-1" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} placeholder="Nova categoria" />
+        <div className="flex min-w-[220px] flex-1 gap-2">
+          <input className="ds-input flex-1" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} placeholder="Nova categoria" aria-label="Nova categoria" />
           <Button variant="ghost" onClick={() => { addCategory(categoryName); setCategoryName('') }}>
             Criar
           </Button>
@@ -64,10 +77,10 @@ export default function LibraryPage() {
         {meta.categories.map((category) => (
           <div key={category.id} className="flex items-center gap-2 rounded-full border border-white/10 bg-[color:var(--surface-2)] px-3 py-1 text-sm">
             <span>{category.name}</span>
-            <button className="text-white/60 hover:text-white" onClick={() => renameCategory(category.id, prompt('Renomear categoria', category.name) || category.name)}>
+            <button type="button" className="text-white/60 transition-colors hover:text-white" onClick={() => handleRenameCategory(category.id, category.name)} aria-label={`Renomear ${category.name}`}>
               ✎
             </button>
-            <button className="text-white/60 hover:text-white" onClick={() => deleteCategory(category.id)}>
+            <button type="button" className="text-white/60 transition-colors hover:text-white" onClick={() => deleteCategory(category.id)} aria-label={`Excluir ${category.name}`}>
               ×
             </button>
           </div>

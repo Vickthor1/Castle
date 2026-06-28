@@ -9,15 +9,17 @@ export default function LibraryGrid({ items, categories, onToggleFavorite, onOpe
   const { ref, size } = useSize<HTMLDivElement>()
   const [context, setContext] = useState<{ x: number; y: number; item: AppItem } | null>(null)
   const [draggedId, setDraggedId] = useState<string | null>(null)
-  const { width } = size
+  const { width, height } = size
 
   const columnWidth = 220
   const rowHeight = 240
-  const columnCount = Math.max(1, Math.floor((width || window.innerWidth) / columnWidth))
+  const effectiveWidth = width || window.innerWidth || 960
+  const effectiveHeight = Math.max(320, height || window.innerHeight - 260)
+  const columnCount = Math.max(1, Math.floor(effectiveWidth / columnWidth))
   const rowCount = Math.ceil(items.length / columnCount)
 
   const Cell = useCallback(
-    ({ columnIndex, rowIndex, style }) => {
+    ({ columnIndex, rowIndex, style }: { columnIndex: number; rowIndex: number; style: React.CSSProperties }) => {
       const index = rowIndex * columnCount + columnIndex
       if (index >= items.length) return null
       const item = items[index]
@@ -42,25 +44,31 @@ export default function LibraryGrid({ items, categories, onToggleFavorite, onOpe
         </div>
       )
     },
-    [items, columnCount, onOpen, onToggleFavorite]
+    [categories, columnCount, draggedId, items, onAssignCategory, onOpen, onReorder, onToggleFavorite]
   )
 
+  const gridHeight = useMemo(() => Math.max(320, effectiveHeight), [effectiveHeight])
+
   return (
-    <div ref={ref} style={{ width: '100%', height: '100%' }}>
-      <div style={{ height: 'calc(100vh - 220px)' }}>
+    <div ref={ref} className="h-full w-full min-h-[320px]">
+      {items.length === 0 ? (
+        <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-white/10 bg-[color:var(--surface-2)] text-sm text-white/60">
+          Nenhum app encontrado.
+        </div>
+      ) : (
         <Grid
           columnCount={columnCount}
           columnWidth={columnWidth}
-          height={Math.max(300, window.innerHeight - 220)}
+          height={gridHeight}
           rowCount={rowCount}
           rowHeight={rowHeight}
-          width={width || window.innerWidth}
+          width={effectiveWidth}
           overscanRowCount={3}
           overscanColumnCount={2}
         >
           {Cell}
         </Grid>
-      </div>
+      )}
       {context && (
         <ContextMenu
           x={context.x}
