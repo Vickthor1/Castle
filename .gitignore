@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dist-electron/
+.vite/
+.turbo/
+build/
+.DS_Store
+env.local
+*.local
+dist_*
+/*.log
