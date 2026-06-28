@@ -37,7 +37,7 @@ export default function LibraryPage() {
             </option>
           ))}
         </select>
-        <select className="ds-input w-44" value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+        <select className="ds-input w-44" value={sortBy} onChange={(e) => setSortBy(e.target.value as 'name' | 'category')}>
           <option value="name">Ordenar por nome</option>
           <option value="category">Ordenar por categoria</option>
         </select>

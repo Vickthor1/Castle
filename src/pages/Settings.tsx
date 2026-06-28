@@ -69,7 +69,7 @@ export default function SettingsPage() {
         <AnimatedSurface className="ds-card flex flex-col gap-4">
           <div>
             <div className="text-sm font-semibold">Tema</div>
-            <select className="ds-input mt-2 w-full" value={settings.theme} onChange={(e) => void persist({ ...settings, theme: e.target.value as any })}>
+            <select className="ds-input mt-2 w-full" value={settings.theme} onChange={(e) => void persist({ ...settings, theme: e.target.value as AppSettings['theme'] })}>
               <option value="dark">Escuro</option>
               <option value="light">Claro</option>
               <option value="system">Sistema</option>
@@ -78,7 +78,7 @@ export default function SettingsPage() {
 
           <div>
             <div className="text-sm font-semibold">Idioma</div>
-            <select className="ds-input mt-2 w-full" value={settings.language} onChange={(e) => void persist({ ...settings, language: e.target.value as any })}>
+            <select className="ds-input mt-2 w-full" value={settings.language} onChange={(e) => void persist({ ...settings, language: e.target.value as AppSettings['language'] })}>
               <option value="pt-BR">Português (BR)</option>
               <option value="en">English</option>
               <option value="es">Español</option>

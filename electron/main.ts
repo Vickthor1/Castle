@@ -4,8 +4,41 @@ import './windowsIntegration'
 import { registerLibraryStorageHandlers } from './libraryStorage'
 import { initializeSettings, registerSettingsHandlers } from './settings'
 import { createTray, hideWindowToTray, registerTrayHandlers, setMainWindow, showWindow } from './tray'
+import { setupAutoUpdater } from './updater'
 
 let mainWindow: BrowserWindow | null = null
+let splashWindow: BrowserWindow | null = null
+
+function getBuildAssetPath(fileName: string) {
+  return app.isPackaged ? join(process.resourcesPath, 'build', fileName) : join(__dirname, '../build', fileName)
+}
+
+function createSplashWindow() {
+  splashWindow = new BrowserWindow({
+    width: 420,
+    height: 280,
+    frame: false,
+    alwaysOnTop: true,
+    center: true,
+    resizable: false,
+    show: true,
+    backgroundColor: '#0b1020',
+    webPreferences: {
+      preload: join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false
+    }
+  })
+
+  void splashWindow.loadFile(getBuildAssetPath('splash.html'))
+}
+
+function destroySplashWindow() {
+  if (splashWindow && !splashWindow.isDestroyed()) {
+    splashWindow.close()
+  }
+  splashWindow = null
+}
 
 function createWindow() {
   if (mainWindow && !mainWindow.isDestroyed()) {
@@ -14,11 +47,16 @@ function createWindow() {
   }
 
   const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1400,
+    height: 900,
     show: false,
+    title: 'Castle',
+    icon: process.platform === 'win32' ? getBuildAssetPath('icon.png') : undefined,
+    backgroundColor: '#0b1020',
     webPreferences: {
-      preload: join(__dirname, 'preload.js')
+      preload: join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false
     }
   })
 
@@ -51,16 +89,36 @@ function createWindow() {
     }
   })
 
+  if (app.isPackaged) {
+    setTimeout(() => {
+      if (!win.isDestroyed()) win.show()
+    }, 600)
+  }
+
   return win
 }
 
 app.whenReady().then(() => {
+  app.setAppUserModelId('com.example.castle')
   registerLibraryStorageHandlers()
   registerSettingsHandlers()
   registerTrayHandlers()
   initializeSettings()
-  createWindow()
+
+  if (app.isPackaged) {
+    createSplashWindow()
+    setTimeout(() => {
+      createWindow()
+      destroySplashWindow()
+    }, 1200)
+  } else {
+    createWindow()
+  }
+
   createTray()
+  if (app.isPackaged) {
+    setupAutoUpdater()
+  }
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

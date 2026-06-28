@@ -1,9 +1,10 @@
 {
   "name": "castle",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "main": "dist-electron/main.js",
-  "author": "",
+  "author": "Castle",
+  "description": "Launcher moderno para Windows com busca, biblioteca e integração com aplicativos",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
@@ -11,13 +12,14 @@
     "start": "electron .",
     "build:renderer": "vite build",
     "build:electron": "tsc -p tsconfig.electron.json",
-    "build": "npm run build:renderer && npm run build:electron && electron-builder",
+    "build": "npm run build:renderer && npm run build:electron && electron-builder --publish=never",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "format": "prettier --write ."
   },
   "build": {
     "appId": "com.example.castle",
     "productName": "Castle",
+    "artifactName": "Castle-Setup-${version}.${ext}",
     "files": [
       "dist/**",
       "dist-electron/**",
@@ -26,7 +28,33 @@
     "directories": {
       "buildResources": "build",
       "output": "dist"
-    }
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "icones/castle.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Castle"
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://example.com/castle-updates"
+      }
+    ]
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -37,7 +65,7 @@
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.0.0",
     "concurrently": "^7.0.0",
-    "cross-env": "^7.0.0",
+    "electron": "^26.6.10",
     "electron-builder": "^25.0.0",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.0.0",
@@ -55,8 +83,8 @@
   },
   "dependencies": {
     "clsx": "^1.2.1",
-    "electron": "^26.6.10",
     "electron-store": "^8.0.0",
+    "electron-updater": "^6.8.9",
     "framer-motion": "^10.12.16",
     "lucide-react": "^0.268.0",
     "react": "^18.2.0",

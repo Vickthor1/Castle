@@ -1,5 +1,4 @@
-import fs from "fs";
-import path from "path";
+import { exec } from 'child_process'
 
 /**
  * Resolve arquivos .lnk para o caminho real
@@ -11,24 +10,22 @@ export function resolveShortcut(shortcutPath: string): Promise<string> {
       $WshShell = New-Object -ComObject WScript.Shell;
       $Shortcut = $WshShell.CreateShortcut('${shortcutPath.replace(/'/g, "''")}');
       Write-Output $Shortcut.TargetPath;
-    `;
+    `
 
-    const { exec } = require("child_process");
-
-    exec(`powershell -command "${command}"`, (err: any, stdout: string) => {
+    exec(`powershell -command "${command}"`, (err: Error | null, stdout: string) => {
       if (err) {
-        reject(err);
-        return;
+        reject(err)
+        return
       }
 
-      const result = stdout.trim();
+      const result = stdout.trim()
 
       if (!result) {
-        reject(new Error("Não foi possível resolver o atalho."));
-        return;
+        reject(new Error('Não foi possível resolver o atalho.'))
+        return
       }
 
-      resolve(result);
-    });
-  });
+      resolve(result)
+    })
+  })
 }
