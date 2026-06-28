@@ -1,5 +1,6 @@
-import { app, BrowserWindow } from 'electron'
-import { join } from 'path'
+import { app, BrowserWindow, shell } from 'electron'
+import fs from 'fs'
+import { join, dirname } from 'path'
 import './windowsIntegration'
 import { registerLibraryStorageHandlers } from './libraryStorage'
 import { initializeSettings, registerSettingsHandlers } from './settings'
@@ -35,6 +36,28 @@ function getIconPath(fileName: string) {
   return app.isPackaged
     ? join(process.resourcesPath, 'icones', fileName)
     : join(__dirname, '../icones', fileName)
+}
+
+function createDesktopShortcut() {
+  if (process.platform !== 'win32' || !app.isPackaged) return
+
+  const desktopPath = app.getPath('desktop')
+  const shortcutPath = join(desktopPath, 'Castle.lnk')
+  const appPath = process.execPath
+
+  if (fs.existsSync(shortcutPath)) return
+
+  try {
+    shell.writeShortcutLink(shortcutPath, {
+      target: appPath,
+      cwd: dirname(appPath),
+      description: 'Castle Launcher',
+      icon: getIconPath('castle.ico'),
+      iconIndex: 0
+    })
+  } catch (error) {
+    console.error('Falha ao criar atalho na área de trabalho:', error)
+  }
 }
 
 function createSplashWindow() {
@@ -137,6 +160,7 @@ app.whenReady().then(() => {
       createWindow()
       destroySplashWindow()
     }, 1200)
+    createDesktopShortcut()
   } else {
     createWindow()
   }
