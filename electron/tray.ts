@@ -1,11 +1,29 @@
 import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
+import fs from 'fs'
 import path from 'path'
 
 let tray: Tray | null = null
 let mainWindow: BrowserWindow | null = null
 
 function getIconPath() {
-  const iconPath = path.join(__dirname, '..', 'build', 'icon.png')
+  const iconPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'icones', 'castle.ico')
+    : path.resolve(__dirname, '..', 'icones', 'castle.ico')
+
+  if (fs.existsSync(iconPath)) {
+    return iconPath
+  }
+
+  const fallbackPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'icones', 'castle.png')
+    : path.resolve(__dirname, '..', 'icones', 'castle.png')
+
+  if (fs.existsSync(fallbackPath)) {
+    console.warn(`Tray icon not found at ${iconPath}, falling back to ${fallbackPath}`)
+    return fallbackPath
+  }
+
+  console.error(`Tray icon not found at ${iconPath} or ${fallbackPath}`)
   return iconPath
 }
 

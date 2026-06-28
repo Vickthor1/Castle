@@ -10,7 +10,13 @@ let mainWindow: BrowserWindow | null = null
 let splashWindow: BrowserWindow | null = null
 
 function getBuildAssetPath(fileName: string) {
-  return app.isPackaged ? join(process.resourcesPath, 'build', fileName) : join(__dirname, '../build', fileName)
+  return app.isPackaged ? join(process.resourcesPath, fileName) : join(__dirname, '../build', fileName)
+}
+
+function getIconPath(fileName: string) {
+  return app.isPackaged
+    ? join(process.resourcesPath, 'icones', fileName)
+    : join(__dirname, '../icones', fileName)
 }
 
 function createSplashWindow() {
@@ -51,7 +57,7 @@ function createWindow() {
     height: 900,
     show: false,
     title: 'Castle',
-    icon: process.platform === 'win32' ? getBuildAssetPath('icon.png') : undefined,
+    icon: process.platform === 'win32' ? getIconPath('castle.ico') : undefined,
     backgroundColor: '#0b1020',
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
@@ -74,7 +80,9 @@ function createWindow() {
   })
 
   const devUrl = 'http://localhost:5173'
-  if (process.env.NODE_ENV === 'development') {
+  const isDevelopment = !app.isPackaged || process.env.NODE_ENV === 'development'
+
+  if (isDevelopment) {
     win.loadURL(devUrl)
   } else {
     win.loadFile(join(__dirname, '../dist/index.html'))

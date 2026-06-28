@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Sparkles, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { useLibrary } from '@/contexts/LibraryContext';
 import AppIcon from '@/components/AppIcon';
@@ -74,9 +74,16 @@ export default function SpotlightSearch() {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="ds-btn ds-btn-ghost">
-        <Search size={16} />
-        Buscar
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="ds-btn ds-btn-ghost w-full justify-between rounded-[20px] px-4 py-3 text-sm text-white/85 hover:bg-[rgba(255,255,255,0.08)]"
+      >
+        <span className="flex items-center gap-2">
+          <Search size={18} className="text-white/70" />
+          Buscar
+        </span>
+        <span className="text-xs uppercase tracking-[0.24em] text-white/40">Ctrl+P</span>
       </button>
 
       <AnimatePresence>
@@ -85,7 +92,7 @@ export default function SpotlightSearch() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center bg-[rgba(3,3,3,0.78)] p-4 backdrop-blur-2xl"
+            className="fixed inset-0 z-50 flex items-start justify-center bg-[rgba(0,0,0,0.88)] p-6 backdrop-blur-3xl"
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) {
                 closeModal();
@@ -93,57 +100,73 @@ export default function SpotlightSearch() {
             }}
           >
             <motion.div
-              initial={{ y: -16, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -8, opacity: 0 }}
-              className="glass-strong w-full max-w-2xl rounded-2xl p-3 shadow-2xl"
+              initial={{ y: -18, opacity: 0, scale: 0.98 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: -12, opacity: 0, scale: 0.98 }}
+              className="glass-strong w-full max-w-3xl rounded-[32px] border border-[rgba(255,255,255,0.1)] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.65)]"
               role="dialog"
               aria-modal="true"
               aria-label="Busca rápida"
             >
-              <div className="flex items-center gap-2 px-2 py-1">
-                <Search size={18} />
+              <div className="flex items-center gap-3 rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[rgba(255,255,255,0.05)] text-white/70">
+                  <Search size={20} />
+                </div>
                 <input
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={onKeyDown}
                   placeholder="Pesquisar apps, categorias…"
-                  className="w-full bg-transparent px-2 py-2 text-white outline-none"
+                  className="w-full bg-transparent text-lg font-medium text-white placeholder:text-white/35 outline-none"
                   autoFocus
                 />
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="rounded p-2 hover:bg-white/10"
+                  className="grid h-12 w-12 place-items-center rounded-[18px] bg-[rgba(255,255,255,0.04)] text-white/70 transition hover:bg-[rgba(255,255,255,0.08)]"
                   aria-label="Fechar busca"
                 >
-                  <X size={16} />
+                  <X size={18} />
                 </button>
               </div>
-              <div className="mt-2 flex flex-col gap-2">
-                {visibleItems.length === 0 && query && (
-                  <div className="p-3 text-sm text-white/60">Nenhum resultado.</div>
-                )}
-                {visibleItems.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    className={`flex items-center justify-between rounded-lg p-2 ${
-                      idx === index ? 'bg-white/10' : 'hover:bg-white/5'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded bg-white/10">
-                        <AppIcon src={item.icon} className="h-6 w-6 rounded object-cover" />
-                      </div>
-                      <div>
-                        <div className="font-medium">{item.name}</div>
-                        <div className="text-xs text-white/60">{item.category || 'Aplicativo'}</div>
-                      </div>
-                    </div>
-                    <div className="text-xs text-white/40">{idx === index ? 'Enter' : ''}</div>
+              <div className="mt-4 grid gap-3">
+                {visibleItems.length === 0 && query ? (
+                  <div className="rounded-[26px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] p-5 text-sm text-white/60">
+                    Nenhum resultado encontrado.
                   </div>
-                ))}
+                ) : (
+                  visibleItems.map((item, idx) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        window.open(item.path || '', '_blank');
+                        closeModal();
+                      }}
+                      className={`flex w-full items-center justify-between gap-3 rounded-[24px] border px-4 py-4 text-left transition duration-200 ${
+                        idx === index
+                          ? 'border-red-500/30 bg-[rgba(255,0,0,0.12)] shadow-[0_0_0_1px_rgba(255,0,0,0.18)]'
+                          : 'border-white/10 bg-[rgba(255,255,255,0.02)] hover:border-white/20 hover:bg-[rgba(255,255,255,0.06)]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-[18px] bg-[rgba(255,255,255,0.06)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)]">
+                          <AppIcon src={item.icon} className="h-10 w-10 rounded-2xl object-cover" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white">{item.name}</p>
+                          <p className="text-xs uppercase tracking-[0.2em] text-white/40">
+                            {item.category || 'Aplicativo'}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="text-xs uppercase tracking-[0.3em] text-white/40">
+                        ENTER
+                      </span>
+                    </button>
+                  ))
+                )}
               </div>
             </motion.div>
           </motion.div>
