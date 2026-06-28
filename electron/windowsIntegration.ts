@@ -268,34 +268,30 @@ async function scanAndProcess(targetFolders: string[]): Promise<ScanEntry[]> {
   return withIcons
 }
 
-export async function getWindowsApps() {
-  const cached = store.get(CACHE_KEY) as ScanEntry[] | undefined
-  if (cached?.length) return cached
+export async function scanWindowsApps(): Promise<ScanEntry[]> {
   const folders = (store.get(FOLDERS_KEY) as string[] | undefined) || DEFAULT_FOLDERS.filter(Boolean)
   return scanAndProcess(folders)
 }
 
-export async function addWindowsFolder(folder: string) {
+export async function addWindowsFolderToStore(folder: string) {
   const folders = (store.get(FOLDERS_KEY) as string[] | undefined) || []
   if (!folders.includes(folder)) folders.push(folder)
   store.set(FOLDERS_KEY, folders)
   return folders
 }
 
-export async function pickWindowsFolder() {
+export async function pickWindowsFolder(): Promise<string | null> {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
   if (result.canceled || !result.filePaths?.[0]) return null
   return result.filePaths[0]
 }
 
 ipcMain.handle('windows:scanApps', async () => {
-  const folders = (store.get(FOLDERS_KEY) as string[] | undefined) || DEFAULT_FOLDERS.filter(Boolean)
-  const data = await scanAndProcess(folders)
-  return data
+  return scanWindowsApps()
 })
 
 ipcMain.handle('windows:addFolder', async (_event, folder: string) => {
-  return addWindowsFolder(folder)
+  return addWindowsFolderToStore(folder)
 })
 
 ipcMain.handle('windows:pickFolder', async () => pickWindowsFolder())
